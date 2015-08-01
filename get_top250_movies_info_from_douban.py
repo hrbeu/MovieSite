@@ -7,6 +7,7 @@ import web
 
 db=web.database(dbn='sqlite',db='D:/sqlite/MovieSite.db')
 movie_ids=[]
+
 #读取top250电影的id号
 for index in range(0,250,50):
 	print index 
@@ -18,6 +19,7 @@ for index in range(0,250,50):
 		print movie['id'],movie['title']
 	time.sleep(3)  	
 print movie_ids	
+
 #每条电影信息写入数据库
 def add_database(data):
     movie=json.loads(data)

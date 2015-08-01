@@ -9,11 +9,11 @@ $def with(movies,count,key)
 $if count>0:
     <p>共$count部影片<p>
     $if key:
-		<b><u>与$key有关</u></b>
-    <p>影片列表</p>
-    $for movie in movies:
-   	<li>
-        <a href="/movie/$movie['id']">$movie['title']</a>
-   	</li>
+		<b><u>与<a href='http://www.baidu.com/s?wd=$key&cl=3' target="_blank">$key</a>有关</u></b>
 $else:
-	<p>没找到符合条件的影片</p> 
+	  <p>没找到符合条件的影片</p>
+<p>影片列表</p>
+$for movie in movies:
+    <li>
+        <a href="/movie/$movie['id']">$movie['title']</a>
+    </li> 

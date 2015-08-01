@@ -10,6 +10,7 @@ urls=(
 
 render=web.template.render('D:/webpy test/templates/')
 db=web.database(dbn='sqlite',db='D:/sqlite/MovieSite.db')
+
 class index:
      def GET(self):
           movies=db.select('movie')
@@ -52,6 +53,7 @@ class director:
       
 def notfound():
      return web.notfound("Sorry,the page you were looking for was not found.")
+
 if __name__=="__main__":
 	app=web.application(urls,globals())
 	app.notfound=notfound

@@ -4,13 +4,13 @@ $def with (movie)
 <img src="/static/poster/$(movie['id']).jpg">
 <hr>
 <p>原名:$movie['origin']</p>
-<p>豆瓣:<a href='$movie['url']'>$movie['url']</a></p>
+<p>豆瓣:<a href='$movie['url']' target="_blank">$movie['url']</a></p>
 <p>评分:$movie['rating']</p>
 <p>海报:<a href='$movie['image']'>$movie['image']</a></p>
 $ directors=movie['directors'].split(',')
 <p>导演:
 $for director in directors
-    <a href='/director/$director'>$director</p>
+    <a href='/director/$director'>$director</a></p>
 $ casts=movie['casts'].split(',')
 <p>主演:
 $for cast in casts:
