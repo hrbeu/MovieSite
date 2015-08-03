@@ -36,7 +36,8 @@ def add_database(data):
 		year=movie['year'],
 		genres=','.join(movie['genres']),
 		countries=','.join(movie['countries']),
-		summary=movie['summary']
+		summary=movie['summary'],
+		
 		)
     
 count=0

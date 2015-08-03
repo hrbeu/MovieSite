@@ -3,37 +3,54 @@ import web
 
 urls=(
       '/','index',
+      '/(.*?)/', 'redirect',        #保证网址有无'/'结尾，都能指向同一个类
       '/movie/(\d+)','movie',
-      '/cast/(.*)','cast',
-      '/director/(.*)','director',
+      '/cast/(.*[^/])$','cast',    
+      '/director/(.*[^/])$','director', 
+      
       )
 
-render=web.template.render('D:/webpy test/templates/')
+render=web.template.render('D:/GIT/MovieSite/templates/')
+#格式：db=web.database(dbn='postgres', db='mydata', user='dbuser', pw='')
 db=web.database(dbn='sqlite',db='D:/sqlite/MovieSite.db')
 
 class index:
      def GET(self):
-          movies=db.select('movie')
+          movies=db.select('movie')# Select all entries from table
           statement='SELECT COUNT(*) AS COUNT FROM movie'
           count=db.query(statement)[0]['COUNT']
-          return render.index(movies,count,None)
+          out=render.index(movies,count,None)
+          print ' %s Method from IP: %s' % (web.ctx.method,web.ctx.ip)
+          print ' Request page %s ' % out.title
+          return out
      def POST(self):
           data=web.input()
           condition=r'title like "%'+data.title+r'%"'
           movies=db.select('movie',where=condition)
           statement='SELECT COUNT(*) AS COUNT FROM movie WHERE '+condition
           result=db.query(statement)
-          print result
+          #print result
           result_one=result[0]
-          print result_one
+          #print result_one
           count=result_one['COUNT']
-          return render.index(movies,count,data.title)
-     
+          out=render.index(movies,count,data.title)
+          print ' %s Method from IP: %s' % (web.ctx.method,web.ctx.ip)
+          print ' Request page %s ' % out.title
+          return out
+#保证网址有无'/'结尾，都能指向同一个类
+class redirect:
+      def GET(self,path):
+          print ' %s Method from IP: %s' % (web.ctx.method,web.ctx.ip)
+          raise web.seeother('/'+path)
+    
 class movie:
      def GET(self,movie_id):
           movie_id=int(movie_id)
           movie=db.select('movie',where='id=$movie_id',vars=locals())[0]
-          return render.movie(movie)
+          out=render.movie(movie)
+          print ' %s Method from IP: %s' % (web.ctx.method,web.ctx.ip)
+          print ' Request page %s ' % out.title
+          return out
 
 class cast:
      def GET(self,cast_name):
@@ -41,7 +58,10 @@ class cast:
           movies=db.select('movie',where=condition)
           statement='SELECT COUNT(*)  FROM movie  WHERE '+condition
           count=db.query(statement)[0]['COUNT(*)']
-          return render.index(movies,count,cast_name)
+          out=render.index(movies,count,cast_name)
+          print ' %s Method from IP: %s' % (web.ctx.method,web.ctx.ip)
+          print ' Request page %s ' % out.title
+          return out
 
 class director:
       def GET(self,director_name):
@@ -49,12 +69,23 @@ class director:
           movies=db.select('movie',where=condition)
           statement='SELECT COUNT(*) AS COUNT FROM movie WHERE '+condition
           count=db.query(statement)[0]['COUNT']
-          return render.index(movies,count,director_name)
+          out=render.index(movies,count,director_name)
+          print ' %s Method from IP: %s' % (web.ctx.method,web.ctx.ip)
+          print ' Request page %s ' % out.title
+          return out
+
       
 def notfound():
-     return web.notfound("Sorry,the page you were looking for was not found.")
+    print ' %s Method from IP: %s' % (web.ctx.method,web.ctx.ip)
+    #return web.notfound("Sorry,the page you were looking for was not found.")
+    return web.notfound(render.notfound())
+def internalerror():
+    print ' %s Method from IP: %s' % (web.ctx.method,web.ctx.ip)
+    #return web.internalerror('Bad, bad server. No donut for you.')
+    return web.internalerror(render.notfound())
 
 if __name__=="__main__":
-	app=web.application(urls,globals())
-	app.notfound=notfound
-	app.run()
+    app=web.application(urls,globals())
+    app.notfound=notfound
+    app.internalerror=internalerror
+    app.run()
