@@ -44,7 +44,11 @@ count=0
 for movie_id in movie_ids:
     print count,movie_id
     response=urllib.urlopen('http://api.douban.com/v2/movie/subject/%s' % movie_id)
-    add_database(response.read())
+    try:
+            add_database(response.read())
+    except KeyError:
+        print movie_id+"cant't get ,try next one..."
+        continue
     count+=1
     print count
     time.sleep(3)

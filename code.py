@@ -84,7 +84,7 @@ def internalerror():
     #return web.internalerror('Bad, bad server. No donut for you.')
     return web.internalerror(render.notfound())
 
-if __name__=="__main__":
+if __name__=="__main__":#使用服务器运行时去掉句
     app=web.application(urls,globals())
     app.notfound=notfound
     app.internalerror=internalerror
